@@ -1,0 +1,84 @@
+
+<button (click)="login($event)">open LogIn</button>
+<h1>Loged Number is {{ selectedUserPhone }}</h1>
+
+
+<div class="container" *ngIf="showScreen">
+  <div class="flex flex-col">
+    <!-- LIST OF USERS -->
+    <div class="flex flex-md-4">
+      <div class="user-list-card">
+        <div
+          class="user-card flex w-screen border-2 border-gray-300"
+          [ngClass]="user?.phone === selectedUser?.phone ? 'active' : ''"
+          *ngFor="let user of userList"
+          (click)="selectUserHandler(user.phone,user.name)"
+        >
+          <img [src]="user.image" [alt]="user.name"
+          class="w-16 h-16 rounded-full m-2"
+          />
+          <p class="username p-6">{{user.name}}</p>
+        </div>
+      </div>
+    </div>
+    <!-- CHAT BOX -->
+        <ng-container *ngIf="selectedUser">
+          <div class="flex gap-5">
+            <img [src]="selectedUser.image" [alt]="selectedUser.name"
+            class="w-16 h-16 rounded-full m-2"
+            />
+            <p class="username">{{selectedUser.name}}</p>
+          </div>
+          <div class="chat-body">
+            <div *ngFor="let item of messageArray" [ngClass]="item.user === currentUser.name ? 'same-user' : ''">
+            <p class="message-container">{{item.message}}</p>
+            </div>
+          </div>       
+          <div class="chat-footer">
+            <div class="flex flex-row">
+              <div class="col-md-10">
+                <div class="form-group mb-0">
+                  <input type="text" name="" id="" placeholder="type a message" class="form-control p-5" [(ngModel)]="messageText" (keyup)="$event.keyCode === 13 && sendMessage()">
+                </div>
+              </div>
+              <div  class="text-center bg-red-500 text-center">
+                <button class="btn btn-primery btn-sm px-3" (click)="sendMessage()">Send</button>
+              </div>
+            </div>
+          </div>   
+        </ng-container>
+      </div>
+
+</div>
+
+<!-- <ng-template #popup let-d="dismiss">
+
+  <div class="modal-header">
+    <h4 class="modal-tittle">LogIn</h4>
+  </div>
+
+  <div class="modal-body">
+    <div class="flex flex-row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="number " name="" id="" placeholder="Enter Your Phone Nummber" class="form-control" [ngModel]="phone">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-primery">LogIn</button>
+  </div>
+
+  
+
+</ng-template> -->
+
+<!-- <h2 mat-dialog-title>My Modal</h2>
+<div mat-dialog-content>
+  <p>This is the content of my modal.</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="openModal()">Open Modal</button>
+</div> -->
