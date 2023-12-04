@@ -16,10 +16,10 @@ export class AppComponent implements OnInit, AfterViewChecked{
   title = 'Socketio-Frontend';
 
  
-  storageArray: StorageArrayItem[] = []; 
+  storageArray: StorageArrayItem[] = [];
   roomId: string = '';
   messageText: string = '';
-  messageArray: { user: string, message: string }[] = [];
+  messageArray: {user: string, message: string ,phone:string, senderPhone:string}[] = [];
 
   showScreen: boolean = false;
   
@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, AfterViewChecked{
   selectedUser: any;
   selectedUserPhone: any = '';
   selectedUserName: any = '';
+  currentUserName: any = '';
 
   public userList = [
     {
@@ -56,8 +57,15 @@ export class AppComponent implements OnInit, AfterViewChecked{
   ];
 
   constructor(private chatService: ChatService) {
-    chatService.getMessage().subscribe((data: { user: string, message: string }) => {
-      this.messageArray.push(data)
+    chatService.getMessage().subscribe((data: { user: string, message: string, phone:string, senderPhone:string}) => {
+      // this.messageArray.push(data)      
+      const receivedMessage = {
+        user: data.user,
+        message: data.message,
+        phone: data.phone,
+        senderPhone:data.senderPhone
+      };
+      this.messageArray.push(receivedMessage);
     });
   }
 
@@ -66,23 +74,26 @@ export class AppComponent implements OnInit, AfterViewChecked{
   }
 
   ngAfterViewChecked(): void {
-     
+
   }
 
   login(dismiss:any) {
     const inputval = prompt('Enter your name:');
     this.selectedUserPhone = inputval
     this.currentUser = this.userList.find(user => user.phone === this.selectedUserPhone.toLowerCase())    
-    this.userList = this.userList.filter((user)=>user.phone !== this.selectedUserPhone.toLowerCase())    
+    this.userList = this.userList.filter((user)=>user.phone !== this.selectedUserPhone.toLowerCase())  
+      
     this.showScreen = true
     this.chatService.joinRoom(this.selectedUserPhone)
   }
 
+  filteredUsers: { user: string; phone: string; message: string }[] = [];
 
   selectUserHandler(phone: string, name: string): void {
     this.selectedUserPhone = phone
-    this.selectedUserName = this.currentUser.name
-    this.selectedUser = this.userList.find(user => user.phone === phone.toLowerCase())
+    this.selectedUserName = name
+    this.currentUserName = this.currentUser.name
+    this.selectedUser = this.userList.find(user => user.phone === phone.toLowerCase())    
   }
 
   join(userName: string, roomId: string): void {
@@ -90,13 +101,19 @@ export class AppComponent implements OnInit, AfterViewChecked{
   }
 
   sendMessage(): void {
-    
-    this.chatService.sendMessage({
-      user: this.selectedUserName,
-      phone: this.selectedUserPhone,
-      message: this.messageText
-    });
+      
+      const messageData = {
+        user: this.selectedUser,
+        phone: this.selectedUserPhone,
+        senderPhone: this.currentUser.phone,
+        message: this.messageText
+      };
 
-
+      this.chatService.sendMessage(messageData);
+      this.messageArray.push(messageData);
+      
+      this.messageText = '';
   }
+
+  
 }

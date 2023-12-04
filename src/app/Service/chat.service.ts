@@ -19,7 +19,7 @@ export class ChatService {
   }
 
   sendMessage(data:any):void{    
-    this.socket.emit('message',data)
+    this.socket.emit('message',data)  
   }
 
   getMessage():Observable<any>{

@@ -29,11 +29,38 @@
             />
             <p class="username">{{selectedUser.name}}</p>
           </div>
-          <div class="chat-body">
-            <div *ngFor="let item of messageArray" [ngClass]="item.user === currentUser.name ? 'same-user' : ''">
-            <p class="message-container">{{item.message}}</p>
+          <!-- ***** CHAT BODY *****-->
+
+          <div class="flex justify-between w-screen p-4">
+            <div class="flex flex-col w-full">
+              <div *ngFor="let item of messageArray">
+                <div *ngIf="item.phone === selectedUser.phone" class="bg-red-500 text-white p-2 mb-2 rounded-lg flex justify-end">
+                  {{ item.message }}
+                </div>
+                <div *ngIf="item.phone === currentUser.phone" class="bg-blue-500 text-white p-2 mb-2 rounded-lg flex justify-start">
+                  {{ item.message }}
+                </div>
+              </div>
             </div>
-          </div>       
+          </div>
+         
+              <!-- <div *ngIf="item.phone === currentUser.phone; else elseBlock">
+                  <p class="message-container bg-red-500">
+                    {{ item.message + item.phone}}
+                  </p>
+                </div>
+                
+               <div>
+                <ng-template #elseBlock>
+                  <div class="bg-blue-500">
+                    <p class="other-message-container">
+                      {{ item.message  + item.phone}}
+                    </p>
+                  </div>
+                </ng-template>
+               </div> -->
+          
+          
           <div class="chat-footer">
             <div class="flex flex-row">
               <div class="col-md-10">
